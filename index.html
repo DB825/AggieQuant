@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AggieQuant | Texas A&M Quantitative Finance</title>
+    <meta name="description" content="Texas A&M Quantitative Finance Club. Centered around mathematics, statistics, and game theory.">
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Outfit:wght@400;600;800&display=swap" rel="stylesheet">
+    
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Animated Background Nodes -->
+    <div class="blob blob-1"></div>
+    <div class="blob blob-2"></div>
+
+    <!-- Navigation Header -->
+    <header class="header">
+        <div class="container header-content">
+            <div class="logo">
+                <span class="logo-text">Aggie<span class="accent">Quant</span></span>
+            </div>
+            <nav class="nav">
+                <a href="#home" class="nav-link">Home</a>
+                <a href="#pillars" class="nav-link">Pillars</a>
+                <a href="#about" class="nav-link">About</a>
+                <a href="#join" class="btn btn-primary">Join Us</a>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <!-- Hero Section -->
+        <section id="home" class="hero">
+            <div class="container hero-container">
+                <div class="hero-content">
+                    <div class="badge fade-up">Texas A&M University</div>
+                    <h1 class="hero-title fade-up delay-1">Master the Markets.<br>Engineer the <span class="text-gradient">Future.</span></h1>
+                    <p class="hero-subtitle fade-up delay-2">We are the premier quantitative finance organization at Texas A&M, dedicated to the rigorous application of mathematics, statistics, and game theory to financial markets.</p>
+                    <div class="hero-actions fade-up delay-3">
+                        <a href="#pillars" class="btn btn-primary">Discover Our Focus</a>
+                        <a href="#join" class="btn btn-secondary">Apply Now</a>
+                    </div>
+                </div>
+                <!-- Dynamic Visual Element -->
+                <div class="hero-visual fade-up delay-2">
+                    <div class="glass-orb">
+                        <div class="orb-core">
+                            <i class="fa-solid fa-atom"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Core Pillars Section -->
+        <section id="pillars" class="section pillars">
+            <div class="container">
+                <div class="section-header reveal">
+                    <h2 class="section-title">Our Core <span class="accent">Pillars</span></h2>
+                    <p class="section-subtitle">A multi-disciplinary approach to solving complex financial challenges.</p>
+                </div>
+                
+                <div class="pillar-grid">
+                    <!-- Math -->
+                    <div class="pillar-card glass reveal">
+                        <div class="pillar-icon">
+                            <i class="fa-solid fa-square-root-variable"></i>
+                        </div>
+                        <h3 class="pillar-title">Mathematics</h3>
+                        <p class="pillar-desc">Applying stochastic calculus, linear algebra, and differential equations to model asset prices, derivative pricing, and portfolio optimization.</p>
+                    </div>
+                    
+                    <!-- Stats -->
+                    <div class="pillar-card glass reveal delay-1">
+                        <div class="pillar-icon">
+                            <i class="fa-solid fa-chart-line"></i>
+                        </div>
+                        <h3 class="pillar-title">Statistics</h3>
+                        <p class="pillar-desc">Leveraging big data, machine learning, and econometrics to unearth alpha-generating signals and construct rigorous risk management protocols.</p>
+                    </div>
+                    
+                    <!-- Game Theory -->
+                    <div class="pillar-card glass reveal delay-2">
+                        <div class="pillar-icon">
+                            <i class="fa-solid fa-chess-knight"></i>
+                        </div>
+                        <h3 class="pillar-title">Game Theory</h3>
+                        <p class="pillar-desc">Understanding market microstructure, strategic interactions, and mechanism design to outmaneuver competitors in algorithmic trading environments.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- About Us Section -->
+        <section id="about" class="section about">
+            <div class="container about-container reveal">
+                <div class="about-content glass">
+                    <h2 class="section-title">About <span class="accent">us</span></h2>
+                    <p class="lead-text">Bridging the gap between academic theory and real-world financial application.</p>
+                    <p>Founded at Texas A&M University, AggieQuant provides a collaborative environment for top-tier analytical minds across engineering, math, and business disciplines. Through iterative hands-on projects, algorithmic trading competitions, and industry-led workshops, our members build the technical and strategic acumen necessary to succeed at the world's leading quantitative hedge funds and proprietary trading firms.</p>
+                    
+                    <div class="stats-row reveal delay-1">
+                        <div class="stat-item">
+                            <h4 class="stat-num">50+</h4>
+                            <span class="stat-label">Active Members</span>
+                        </div>
+                        <div class="stat-item">
+                            <h4 class="stat-num">3</h4>
+                            <span class="stat-label">Core Disciplines</span>
+                        </div>
+                        <div class="stat-item">
+                            <h4 class="stat-num">100%</h4>
+                            <span class="stat-label">Driven</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- CTA Section -->
+        <section id="join" class="section cta">
+            <div class="container">
+                <div class="cta-box glass reveal">
+                    <h2>Ready to Build Your Edge?</h2>
+                    <p>Join a network of the brightest analytical minds mapping the future of finance.</p>
+                    <form class="cta-form" onsubmit="event.preventDefault(); alert('Thanks for your interest! We will contact you soon.');">
+                        <input type="email" placeholder="Enter your TAMU email" class="input-field" required>
+                        <button class="btn btn-primary" type="submit">Stay Updated</button>
+                    </form>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container footer-content">
+            <div class="footer-brand">
+                <span class="logo-text">Aggie<span class="accent">Quant</span></span>
+                <p>Texas A&M University</p>
+            </div>
+            <div class="footer-links">
+                <a href="#" aria-label="LinkedIn"><i class="fa-brands fa-linkedin"></i></a>
+                <a href="#" aria-label="GitHub"><i class="fa-brands fa-github"></i></a>
+                <a href="#" aria-label="Discord"><i class="fa-brands fa-discord"></i></a>
+            </div>
+        </div>
+        <div class="container footer-bottom">
+            <p>&copy; 2026 AggieQuant. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="script.js"></script>
+</body>
+</html>

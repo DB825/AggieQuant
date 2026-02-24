@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Career Tracks | AggieQuant</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Outfit:wght@400;600;800&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <div class="blob blob-1"></div>
+    <div class="blob blob-2"></div>
+
+    <!-- Navigation Header -->
+    <header class="header">
+        <div class="container header-content">
+            <div class="logo">
+                <a href="index.html"><span class="logo-text">Aggie<span class="accent">Quant</span></span></a>
+            </div>
+            <nav class="nav">
+                <a href="index.html" class="nav-link">Home</a>
+                <a href="tracks.html" class="nav-link" style="color: var(--text-main);">Tracks</a>
+                <a href="teams.html" class="nav-link">Teams</a>
+                <a href="events.html" class="nav-link">Events</a>
+                <a href="guides.html" class="nav-link">Guides</a>
+                <a href="index.html#join" class="btn btn-primary">Join Us</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="page-content">
+        <section class="section">
+            <div class="container">
+                <div class="section-header reveal">
+                    <h1 class="page-title">Career <span class="text-gradient">Tracks</span></h1>
+                    <p class="section-subtitle">Explore the three core disciplines of quantitative finance and how we
+                        prepare you for them.</p>
+                </div>
+
+                <div class="track-list">
+                    <!-- Track 1: Dev -->
+                    <div class="track-card glass reveal delay-1">
+                        <div class="track-header">
+                            <div class="track-icon"><i class="fa-solid fa-server"></i></div>
+                            <h2 class="track-title">Quantitative Developer</h2>
+                        </div>
+                        <div class="track-body">
+                            <p>Quant Devs build the lightning-fast infrastructure that executes trades in microseconds.
+                                They write low-latency C++ code, design massive data pipelines, and optimize systems to
+                                handle terabytes of market data.</p>
+                            <h4>Key Skills:</h4>
+                            <ul class="skill-tags">
+                                <li>C++ / Systems Programming</li>
+                                <li>Low-Latency Design</li>
+                                <li>Distributed Systems (Kafka, Spark)</li>
+                                <li>Python (Data Engineering)</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Track 2: Trader -->
+                    <div class="track-card glass reveal delay-2">
+                        <div class="track-header">
+                            <div class="track-icon"><i class="fa-solid fa-money-bill-trend-up"></i></div>
+                            <h2 class="track-title">Quantitative Trader</h2>
+                        </div>
+                        <div class="track-body">
+                            <p>Quant Traders manage the execution of strategies, monitor risk in real-time, and identify
+                                short-term market inefficiencies. They rely on probability, game theory, and quick
+                                mental math to outmaneuver the market.</p>
+                            <h4>Key Skills:</h4>
+                            <ul class="skill-tags">
+                                <li>Mental Math / Probability</li>
+                                <li>Game Theory / Strategy</li>
+                                <li>Market Microstructure</li>
+                                <li>Risk Management</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Track 3: Researcher -->
+                    <div class="track-card glass reveal delay-3">
+                        <div class="track-header">
+                            <div class="track-icon"><i class="fa-solid fa-brain"></i></div>
+                            <h2 class="track-title">Quantitative Researcher</h2>
+                        </div>
+                        <div class="track-body">
+                            <p>Quant Researchers are the scientists of the market. They use advanced statistics, machine
+                                learning, and immense datasets to discover "Alpha"—the hidden predictive signals that
+                                dictate future market movement.</p>
+                            <h4>Key Skills:</h4>
+                            <ul class="skill-tags">
+                                <li>Applied Statistics</li>
+                                <li>Machine Learning / Time Series Analysis</li>
+                                <li>Python (Pandas, NumPy, PyTorch)</li>
+                                <li>Stochastic Calculus</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container footer-content">
+            <div class="footer-brand">
+                <span class="logo-text">Aggie<span class="accent">Quant</span></span>
+                <p>Texas A&M University</p>
+            </div>
+            <div class="footer-links">
+                <a href="#" aria-label="LinkedIn"><i class="fa-brands fa-linkedin"></i></a>
+                <a href="#" aria-label="GitHub"><i class="fa-brands fa-github"></i></a>
+                <a href="#" aria-label="Discord"><i class="fa-brands fa-discord"></i></a>
+            </div>
+        </div>
+        <div class="container footer-bottom">
+            <p>&copy; 2026 AggieQuant. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+
+</html>

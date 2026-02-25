@@ -53,11 +53,8 @@
         </div>
 
         <div class="apply-container reveal delay-1">
-            <!-- Getform.io is a reliable alternative that allows 100 free submissions/month WITH file uploads -->
-            <!-- Step 1: Create a free account at getform.io -->
-            <!-- Step 2: Create an endpoint and paste the URL below -->
-            <form class="apply-form glass" action="https://getform.io/f/YOUR_ENDPOINT_HERE" method="POST"
-                enctype="multipart/form-data">
+            <!-- Custom Vercel Backend: Submits data to /api/submit.js -->
+            <form class="apply-form glass" action="/api/submit" method="POST" enctype="multipart/form-data">
 
                 <!-- Optional: FormSubmit Redirection -->
                 <input type="hidden" name="_next" value="https://aggiequant.com">

@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Apply | AggieQuant</title>
+    <meta name="description" content="Apply to join the Texas A&M Quantitative Finance Club.">
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Outfit:wght@400;600;800&display=swap"
+        rel="stylesheet">
+
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <!-- Animated Background Nodes -->
+    <div class="blob blob-1"></div>
+    <div class="blob blob-2"></div>
+
+    <!-- Navigation Header -->
+    <header class="header">
+        <div class="container header-content">
+            <div class="logo">
+                <a href="index.html"><span class="logo-text">Aggie<span class="accent">Quant</span></span></a>
+            </div>
+            <div class="menu-toggle" id="mobile-menu">
+                <i class="fa-solid fa-bars"></i>
+            </div>
+            <nav class="nav">
+                <a href="index.html" class="nav-link">Home</a>
+                <a href="tracks.html" class="nav-link">Tracks</a>
+                <a href="teams.html" class="nav-link">Teams</a>
+                <a href="events.html" class="nav-link">Events</a>
+                <a href="guides.html" class="nav-link">Guides</a>
+                <a href="apply.html" class="btn btn-primary" style="color: white;">Apply Now</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="page-content container">
+        <div class="page-header reveal">
+            <h1 class="page-title">Member <span class="accent">Application</span></h1>
+            <p class="section-subtitle">Become a part of the premier quantitative finance organization at Texas A&M.</p>
+        </div>
+
+        <div class="apply-container reveal delay-1">
+            <form class="apply-form glass" action="#" method="POST" enctype="multipart/form-data">
+
+                <h3 class="form-section-title">Personal Information</h3>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="first-name">First Name *</label>
+                        <input type="text" id="first-name" name="first-name" class="form-control" required
+                            placeholder="John">
+                    </div>
+                    <div class="form-group">
+                        <label for="last-name">Last Name *</label>
+                        <input type="text" id="last-name" name="last-name" class="form-control" required
+                            placeholder="Doe">
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="tamu-email">TAMU Email *</label>
+                        <input type="email" id="tamu-email" name="tamu-email" class="form-control" required
+                            placeholder="john.doe@tamu.edu">
+                    </div>
+                    <div class="form-group">
+                        <label for="gpa">Cumulative GPA *</label>
+                        <input type="number" id="gpa" name="gpa" class="form-control" required step="0.01" min="0"
+                            max="4.0" placeholder="4.00">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Track Preference *</label>
+                    <div class="radio-group">
+                        <label class="radio-label">
+                            <input type="radio" name="track" value="developer" required>
+                            <span class="custom-radio"></span> Quantitative Developer
+                        </label>
+                        <label class="radio-label">
+                            <input type="radio" name="track" value="researcher">
+                            <span class="custom-radio"></span> Quantitative Researcher
+                        </label>
+                        <label class="radio-label">
+                            <input type="radio" name="track" value="trader">
+                            <span class="custom-radio"></span> Quantitative Trader
+                        </label>
+                    </div>
+                </div>
+
+                <h3 class="form-section-title">Application Questions</h3>
+
+                <div class="form-group">
+                    <label for="why-quant">Why Quant? *</label>
+                    <textarea id="why-quant" name="why-quant" class="form-control" required rows="4"
+                        placeholder="Tell us why you are interested in quantitative finance..."></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="goals">What do you want to get out of this club? *</label>
+                    <textarea id="goals" name="goals" class="form-control" required rows="4"
+                        placeholder="Describe your goals and expectations..."></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="awards">List any relevant awards you've received (Optional)</label>
+                    <textarea id="awards" name="awards" class="form-control" rows="3"
+                        placeholder="Competitions, scholarships, hackathons, etc..."></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="fun-fact">Fun fact! *</label>
+                    <input type="text" id="fun-fact" name="fun-fact" class="form-control" required
+                        placeholder="Share something interesting about yourself...">
+                </div>
+
+                <h3 class="form-section-title">Attachments</h3>
+
+                <div class="form-group">
+                    <label for="resume">Resume (PDF only) *</label>
+                    <div class="file-upload-wrapper">
+                        <input type="file" id="resume" name="resume" accept=".pdf" class="file-upload-input" required>
+                        <div class="file-upload-design">
+                            <i class="fa-solid fa-cloud-arrow-up"></i>
+                            <span class="file-upload-text">Click to browse or drag and drop</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-actions border-top">
+                    <button type="submit" class="btn btn-primary submit-btn">Submit Application</button>
+                </div>
+
+            </form>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container footer-content">
+            <div class="footer-brand">
+                <span class="logo-text">Aggie<span class="accent">Quant</span></span>
+                <p>Texas A&M University</p>
+            </div>
+            <div class="footer-links">
+                <a href="#" aria-label="LinkedIn"><i class="fa-brands fa-linkedin"></i></a>
+                <a href="#" aria-label="GitHub"><i class="fa-brands fa-github"></i></a>
+                <a href="#" aria-label="Discord"><i class="fa-brands fa-discord"></i></a>
+            </div>
+        </div>
+        <div class="container footer-bottom">
+            <p>&copy; 2026 AggieQuant. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="script.js"></script>
+</body>
+
+</html>

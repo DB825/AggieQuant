@@ -13,11 +13,12 @@ export default async function handler(req, res) {
         return res.status(405).json({ message: 'Method Not Allowed' });
     }
 
-    // Ensure environment variables are set
+    // Check if email variables are set (optional notifications)
     const { EMAIL_USER, EMAIL_PASS } = process.env;
-    if (!EMAIL_USER || !EMAIL_PASS) {
-        console.error("Missing EMAIL_USER or EMAIL_PASS environment variables.");
-        return res.status(500).json({ error: 'Server configuration error. Contact admin.' });
+    const sendEmails = !!(EMAIL_USER && EMAIL_PASS);
+
+    if (!sendEmails) {
+        console.warn("EMAIL_USER or EMAIL_PASS not set. Email notifications are disabled.");
     }
 
     const form = formidable({ multiples: false }); // We expect one resume file max
@@ -82,51 +83,53 @@ export default async function handler(req, res) {
                 } else {
                     console.warn("DATABASE_URL is not set. Skipping database insertion.");
                 }
-                // Configure Nodemailer Transport
-                const transporter = nodemailer.createTransport({
-                    service: 'gmail',
-                    auth: {
-                        user: EMAIL_USER,
-                        pass: EMAIL_PASS,
-                    },
-                });
-
-                // Construct HTML Email Content
-                const htmlContent = `
-          <h2>New AggieQuant Member Application</h2>
-          <p><strong>Name:</strong> ${firstName} ${lastName}</p>
-          <p><strong>Email:</strong> ${email}</p>
-          <p><strong>GPA:</strong> ${gpa}</p>
-          <p><strong>Track Preference:</strong> ${track}</p>
-          <hr />
-          <h3>Application Responses:</h3>
-          <p><strong>Why Quant?</strong><br/>${whyQuant}</p>
-          <p><strong>Goals & Expectations:</strong><br/>${goals}</p>
-          <p><strong>Awards:</strong><br/>${awards || 'None listed'}</p>
-          <p><strong>Fun Fact:</strong><br/>${funFact}</p>
-        `;
-
-                // Configure Email Options
-                const mailOptions = {
-                    from: `"AggieQuant Application" <${EMAIL_USER}>`,
-                    to: EMAIL_USER, // Send to the configured environment variable email
-                    replyTo: email, // If you hit reply, it replies to the applicant
-                    subject: `New Application: ${firstName} ${lastName} - ${track.toUpperCase()}`,
-                    html: htmlContent,
-                };
-
-                // Attach Resume if it exists
-                if (resumeFile) {
-                    mailOptions.attachments = [
-                        {
-                            filename: resumeFile.originalFilename || 'resume.pdf',
-                            path: resumeFile.filepath, // Path to the temporarily uploaded file
+                if (sendEmails) {
+                    // Configure Nodemailer Transport
+                    const transporter = nodemailer.createTransport({
+                        service: 'gmail',
+                        auth: {
+                            user: EMAIL_USER,
+                            pass: EMAIL_PASS,
                         },
-                    ];
-                }
+                    });
 
-                // Send Email
-                await transporter.sendMail(mailOptions);
+                    // Construct HTML Email Content
+                    const htmlContent = `
+              <h2>New AggieQuant Member Application</h2>
+              <p><strong>Name:</strong> ${firstName} ${lastName}</p>
+              <p><strong>Email:</strong> ${email}</p>
+              <p><strong>GPA:</strong> ${gpa}</p>
+              <p><strong>Track Preference:</strong> ${track}</p>
+              <hr />
+              <h3>Application Responses:</h3>
+              <p><strong>Why Quant?</strong><br/>${whyQuant}</p>
+              <p><strong>Goals & Expectations:</strong><br/>${goals}</p>
+              <p><strong>Awards:</strong><br/>${awards || 'None listed'}</p>
+              <p><strong>Fun Fact:</strong><br/>${funFact}</p>
+            `;
+
+                    // Configure Email Options
+                    const mailOptions = {
+                        from: `"AggieQuant Application" <${EMAIL_USER}>`,
+                        to: EMAIL_USER, // Send to the configured environment variable email
+                        replyTo: email, // If you hit reply, it replies to the applicant
+                        subject: `New Application: ${firstName} ${lastName} - ${track.toUpperCase()}`,
+                        html: htmlContent,
+                    };
+
+                    // Attach Resume if it exists
+                    if (resumeFile) {
+                        mailOptions.attachments = [
+                            {
+                                filename: resumeFile.originalFilename || 'resume.pdf',
+                                path: resumeFile.filepath, // Path to the temporarily uploaded file
+                            },
+                        ];
+                    }
+
+                    // Send Email
+                    await transporter.sendMail(mailOptions);
+                }
 
                 // Redirect user back to home page with a success anchor (or similar)
                 // Note: For a seamless experience, you'd ideally have a /success.html page.

@@ -44,6 +44,43 @@ export default async function handler(req, res) {
             const resumeFile = Array.isArray(files.resume) ? files.resume[0] : files.resume;
 
             try {
+                // Connect to PostgreSQL and insert application
+                if (process.env.DATABASE_URL) {
+                    const { Pool } = require('pg');
+                    const pool = new Pool({
+                        connectionString: process.env.DATABASE_URL,
+                        ssl: { rejectUnauthorized: false }
+                    });
+
+                    const createTableQuery = `
+                        CREATE TABLE IF NOT EXISTS applications (
+                            id SERIAL PRIMARY KEY,
+                            first_name VARCHAR(100),
+                            last_name VARCHAR(100),
+                            email VARCHAR(255),
+                            gpa NUMERIC(4, 2),
+                            track VARCHAR(50),
+                            why_quant TEXT,
+                            goals TEXT,
+                            awards TEXT,
+                            fun_fact TEXT,
+                            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+                        );
+                    `;
+                    await pool.query(createTableQuery);
+
+                    const insertQuery = `
+                        INSERT INTO applications (first_name, last_name, email, gpa, track, why_quant, goals, awards, fun_fact)
+                        VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
+                    `;
+                    const values = [firstName, lastName, email, gpa, track, whyQuant, goals, awards, funFact];
+                    await pool.query(insertQuery, values);
+
+                    // Release the pool
+                    await pool.end();
+                } else {
+                    console.warn("DATABASE_URL is not set. Skipping database insertion.");
+                }
                 // Configure Nodemailer Transport
                 const transporter = nodemailer.createTransport({
                     service: 'gmail',

@@ -20,6 +20,7 @@
   "homepage": "https://github.com/DB825/AggieQuant#readme",
   "dependencies": {
     "formidable": "^3.5.4",
-    "nodemailer": "^8.0.1"
+    "nodemailer": "^8.0.1",
+    "pg": "^8.19.0"
   }
 }

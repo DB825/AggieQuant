@@ -3,13 +3,13 @@ const formidable = require('formidable');
 const nodemailer = require('nodemailer');
 const { Pool } = require('pg');
 
-export const config = {
+const config = {
     api: {
         bodyParser: false, // Disallow Next.js built-in parsing so formidable can handle the multipart/form-data
     },
 };
 
-export default async function handler(req, res) {
+module.exports = async function handler(req, res) {
     if (req.method !== 'POST') {
         return res.status(405).json({ message: 'Method Not Allowed' });
     }

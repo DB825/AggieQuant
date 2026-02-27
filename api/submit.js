@@ -1,6 +1,7 @@
 require('dotenv').config();
 const formidable = require('formidable');
 const nodemailer = require('nodemailer');
+const { Pool } = require('pg');
 
 export const config = {
     api: {
@@ -48,7 +49,6 @@ export default async function handler(req, res) {
             try {
                 // Connect to PostgreSQL and insert application
                 if (process.env.DATABASE_URL) {
-                    const { Pool } = require('pg');
                     const pool = new Pool({
                         connectionString: process.env.DATABASE_URL,
                         ssl: { rejectUnauthorized: false }

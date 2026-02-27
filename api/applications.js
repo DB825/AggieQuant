@@ -1,4 +1,6 @@
 require('dotenv').config();
+const { Pool } = require('pg');
+
 export default async function handler(req, res) {
     if (req.method !== 'GET') {
         return res.status(405).json({ message: 'Method Not Allowed' });
@@ -17,7 +19,6 @@ export default async function handler(req, res) {
     }
 
     try {
-        const { Pool } = require('pg');
         const pool = new Pool({
             connectionString: process.env.DATABASE_URL,
             ssl: { rejectUnauthorized: false }

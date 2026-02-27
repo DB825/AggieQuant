@@ -1,11 +1,10 @@
-require('dotenv').config();
-const formidable = require('formidable');
-const nodemailer = require('nodemailer');
-const { Pool } = require('pg');
+import formidable from 'formidable';
+import nodemailer from 'nodemailer';
+import { Pool } from 'pg';
+import dotenv from 'dotenv';
+dotenv.config();
 
-// Removed config block to avoid Vercel edge runtime conflicts
-
-module.exports = async function handler(req, res) {
+export default async function handler(req, res) {
     if (req.method !== 'POST') {
         return res.status(405).json({ message: 'Method Not Allowed' });
     }

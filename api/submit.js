@@ -1,3 +1,4 @@
+require('dotenv').config();
 const formidable = require('formidable');
 const nodemailer = require('nodemailer');
 

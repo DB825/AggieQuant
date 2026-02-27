@@ -19,6 +19,7 @@
   },
   "homepage": "https://github.com/DB825/AggieQuant#readme",
   "dependencies": {
+    "dotenv": "^17.3.1",
     "formidable": "^3.5.4",
     "nodemailer": "^8.0.1",
     "pg": "^8.19.0"

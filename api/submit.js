@@ -1,6 +1,7 @@
 import formidable from 'formidable';
 import nodemailer from 'nodemailer';
 import { Pool } from 'pg';
+import fs from 'fs';
 import dotenv from 'dotenv';
 dotenv.config();
 
@@ -61,16 +62,33 @@ export default async function handler(req, res) {
                             goals TEXT,
                             awards TEXT,
                             fun_fact TEXT,
+                            resume_filename VARCHAR(255),
+                            resume_data TEXT,
                             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
                         );
                     `;
                     await pool.query(createTableQuery);
 
+                    // Process Resume for Database Storage
+                    let resumeFilename = null;
+                    let resumeBase64 = null;
+
+                    if (resumeFile) {
+                        try {
+                            resumeFilename = resumeFile.originalFilename || 'resume.pdf';
+                            const fileBuffer = await fs.promises.readFile(resumeFile.filepath);
+                            resumeBase64 = fileBuffer.toString('base64');
+                        } catch (fsErr) {
+                            console.error("Error reading resume file for DB:", fsErr);
+                            // We will proceed without crashing, just omitting the resume
+                        }
+                    }
+
                     const insertQuery = `
-                        INSERT INTO applications (first_name, last_name, email, gpa, track, why_quant, goals, awards, fun_fact)
-                        VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
+                        INSERT INTO applications (first_name, last_name, email, gpa, track, why_quant, goals, awards, fun_fact, resume_filename, resume_data)
+                        VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)
                     `;
-                    const values = [firstName, lastName, email, gpa, track, whyQuant, goals, awards, funFact];
+                    const values = [firstName, lastName, email, gpa, track, whyQuant, goals, awards, funFact, resumeFilename, resumeBase64];
                     await pool.query(insertQuery, values);
 
                     // Release the pool

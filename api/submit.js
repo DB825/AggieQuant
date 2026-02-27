@@ -3,11 +3,7 @@ const formidable = require('formidable');
 const nodemailer = require('nodemailer');
 const { Pool } = require('pg');
 
-const config = {
-    api: {
-        bodyParser: false, // Disallow Next.js built-in parsing so formidable can handle the multipart/form-data
-    },
-};
+// Removed config block to avoid Vercel edge runtime conflicts
 
 module.exports = async function handler(req, res) {
     if (req.method !== 'POST') {

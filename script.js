@@ -94,4 +94,56 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    // 5. Custom Form Validation (Apply Page)
+    const applyForm = document.querySelector('.apply-form');
+    const formErrorMsg = document.getElementById('form-error-msg');
+    const errorText = document.getElementById('error-text');
+
+    if (applyForm) {
+        applyForm.addEventListener('submit', function (e) {
+            let isValid = true;
+            let errorMessage = '';
+
+            const gpaInput = document.getElementById('gpa');
+            const fileInput = document.getElementById('resume');
+
+            // Reset error
+            if (formErrorMsg) formErrorMsg.style.display = 'none';
+
+            // Custom validation logic
+            if (gpaInput) {
+                const gpaValue = parseFloat(gpaInput.value);
+                // HTML5 should already stop non-numbers, but this ensures ranges and decimal validity manually
+                if (isNaN(gpaValue) || gpaValue < 0.0 || gpaValue > 4.0) {
+                    isValid = false;
+                    errorMessage = 'GPA must be a valid decimal number between 0.00 and 4.00.';
+                }
+            }
+
+            if (isValid && fileInput && fileInput.files.length > 0) {
+                const file = fileInput.files[0];
+                if (file.type !== 'application/pdf' && !file.name.toLowerCase().endsWith('.pdf')) {
+                    isValid = false;
+                    errorMessage = 'Incorrect file type. Please submit your resume in PDF format only.';
+                }
+            } else if (isValid && (!fileInput || fileInput.files.length === 0)) {
+                // If they bypassed the 'required' HTML attribute somehow
+                isValid = false;
+                errorMessage = 'Please attach your resume.';
+            }
+
+            if (!isValid) {
+                e.preventDefault(); // Stop submission
+                if (formErrorMsg && errorText) {
+                    errorText.textContent = errorMessage;
+                    formErrorMsg.style.display = 'block';
+                    // Scroll to error
+                    formErrorMsg.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                } else {
+                    alert(errorMessage);
+                }
+            }
+        });
+    }
+
 });

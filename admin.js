@@ -125,6 +125,21 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('modal-awards').textContent = app.awards || 'None listed';
         document.getElementById('modal-fact').textContent = app.fun_fact || 'No response provided';
 
+        const resumeBtn = document.getElementById('download-resume-btn');
+        const noResumeMsg = document.getElementById('no-resume-msg');
+
+        if (app.resume_data) {
+            resumeBtn.style.display = 'inline-block';
+            noResumeMsg.style.display = 'none';
+            resumeBtn.onclick = () => {
+                downloadBase64PDF(app.resume_data, app.resume_filename || 'resume.pdf');
+            };
+        } else {
+            resumeBtn.style.display = 'none';
+            noResumeMsg.style.display = 'block';
+            resumeBtn.onclick = null;
+        }
+
         modal.classList.add('active');
     }
 
@@ -138,5 +153,14 @@ document.addEventListener('DOMContentLoaded', () => {
             modal.classList.remove('active');
         }
     });
+
+    // Helper to download base64 PDF
+    function downloadBase64PDF(base64Data, fileName) {
+        const linkSource = `data:application/pdf;base64,${base64Data}`;
+        const downloadLink = document.createElement("a");
+        downloadLink.href = linkSource;
+        downloadLink.download = fileName;
+        downloadLink.click();
+    }
 
 });

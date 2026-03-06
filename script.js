@@ -77,4 +77,21 @@ document.addEventListener('DOMContentLoaded', () => {
             el.classList.add('visible');
         });
     }, 150);
+    // 4. File Upload UI Feedback (Apply Page)
+    const fileInput = document.getElementById('resume');
+    const successMsg = document.getElementById('resume-success-msg');
+    const fileNameSpan = document.getElementById('attached-file-name');
+
+    if (fileInput && successMsg && fileNameSpan) {
+        fileInput.addEventListener('change', (e) => {
+            if (e.target.files && e.target.files.length > 0) {
+                const fileName = e.target.files[0].name;
+                fileNameSpan.textContent = fileName;
+                successMsg.style.display = 'block';
+            } else {
+                successMsg.style.display = 'none';
+            }
+        });
+    }
+
 });

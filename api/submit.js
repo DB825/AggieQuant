@@ -153,7 +153,9 @@ export default async function handler(req, res) {
 
             } catch (sendError) {
                 console.error("Nodemailer Error:", sendError);
-                res.status(500).json({ error: 'Failed to send email' });
+                // Even if email fails, the DB insert was successful, so we still redirect to success
+                res.writeHead(302, { Location: '/index.html?success=true&email_failed=true' });
+                res.end();
                 return resolve();
             }
         });

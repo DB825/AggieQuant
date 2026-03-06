@@ -69,6 +69,10 @@ export default async function handler(req, res) {
                     `;
                     await pool.query(createTableQuery);
 
+                    // Add new columns to existing table
+                    await pool.query('ALTER TABLE applications ADD COLUMN IF NOT EXISTS resume_filename VARCHAR(255);');
+                    await pool.query('ALTER TABLE applications ADD COLUMN IF NOT EXISTS resume_data TEXT;');
+
                     // Process Resume for Database Storage
                     let resumeFilename = null;
                     let resumeBase64 = null;
@@ -96,6 +100,14 @@ export default async function handler(req, res) {
                 } else {
                     console.warn("DATABASE_URL is not set. Skipping database insertion.");
                 }
+            } catch (dbError) {
+                console.error("Database Error:", dbError);
+                res.status(500).json({ error: 'Database error storing application' });
+                return resolve();
+            }
+
+            let emailFailed = false;
+            try {
                 if (sendEmails) {
                     // Configure Nodemailer Transport
                     const transporter = nodemailer.createTransport({
@@ -143,21 +155,19 @@ export default async function handler(req, res) {
                     // Send Email
                     await transporter.sendMail(mailOptions);
                 }
-
-                // Redirect user back to home page with a success anchor (or similar)
-                // Note: For a seamless experience, you'd ideally have a /success.html page.
-                // For now, redirecting to the homepage.
-                res.writeHead(302, { Location: '/index.html?success=true' });
-                res.end();
-                return resolve();
-
             } catch (sendError) {
                 console.error("Nodemailer Error:", sendError);
-                // Even if email fails, the DB insert was successful, so we still redirect to success
-                res.writeHead(302, { Location: '/index.html?success=true&email_failed=true' });
-                res.end();
-                return resolve();
+                emailFailed = true;
             }
+
+            // Redirect user back to home page with a success anchor (or similar)
+            if (emailFailed) {
+                res.writeHead(302, { Location: '/index.html?success=true&email_failed=true' });
+            } else {
+                res.writeHead(302, { Location: '/index.html?success=true' });
+            }
+            res.end();
+            return resolve();
         });
     });
 }

@@ -10,8 +10,16 @@ document.addEventListener('DOMContentLoaded', () => {
     const modal = document.getElementById('details-modal');
     const closeModal = document.getElementById('close-modal');
 
+    // Filter elements
+    const filterDate = document.getElementById('filter-date');
+    const filterGpa = document.getElementById('filter-gpa');
+    const filterTrack = document.getElementById('filter-track');
+    const filterStatus = document.getElementById('filter-status');
+    const clearFiltersBtn = document.getElementById('clear-filters');
+
     let adminToken = '';
     let applicationsData = [];
+    let displayedApplications = [];
 
     // --- Login ---
     loginBtn.addEventListener('click', () => {
@@ -63,7 +71,12 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
             applicationsData = await res.json();
-            renderTable();
+            // Ensure status fallback
+            applicationsData.forEach(app => {
+                app.status = (app.status || 'pending').toLowerCase();
+            });
+
+            applyFilters();
             return true;
         } catch (error) {
             console.error('Error fetching applications:', error);
@@ -81,16 +94,69 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
+    // --- Filtering Logic ---
+    function applyFilters() {
+        const dateVal = filterDate.value ? new Date(filterDate.value) : null;
+        const gpaVal = parseFloat(filterGpa.value) || 0;
+        const trackVal = filterTrack.value.toLowerCase();
+        const statusVal = filterStatus.value.toLowerCase();
+
+        displayedApplications = applicationsData.filter(app => {
+            let pass = true;
+
+            // Date since
+            if (dateVal) {
+                const appDate = new Date(app.created_at);
+                if (appDate < dateVal) pass = false;
+            }
+
+            // GPA
+            if (gpaVal > 0) {
+                const appGpa = parseFloat(app.gpa) || 0;
+                if (appGpa < gpaVal) pass = false;
+            }
+
+            // Track
+            if (trackVal && app.track.toLowerCase() !== trackVal) {
+                pass = false;
+            }
+
+            // Status
+            if (statusVal && app.status !== statusVal) {
+                pass = false;
+            }
+
+            return pass;
+        });
+
+        renderTable();
+    }
+
+    if (filterDate) filterDate.addEventListener('change', applyFilters);
+    if (filterGpa) filterGpa.addEventListener('input', applyFilters);
+    if (filterTrack) filterTrack.addEventListener('change', applyFilters);
+    if (filterStatus) filterStatus.addEventListener('change', applyFilters);
+
+    if (clearFiltersBtn) {
+        clearFiltersBtn.addEventListener('click', () => {
+            filterDate.value = '';
+            filterGpa.value = '';
+            filterTrack.value = '';
+            filterStatus.value = '';
+            applyFilters();
+        });
+    }
+
     // --- Render Table ---
     function renderTable() {
         tableBody.innerHTML = '';
 
-        if (applicationsData.length === 0) {
-            tableBody.innerHTML = '<tr><td colspan="6" style="text-align: center;">No applications found.</td></tr>';
+        if (displayedApplications.length === 0) {
+            tableBody.innerHTML = '<tr><td colspan="7" style="text-align: center;">No applications found.</td></tr>';
             return;
         }
 
-        applicationsData.forEach((app, index) => {
+        displayedApplications.forEach((app, index) => {
             const date = new Date(app.created_at).toLocaleDateString();
 
             const tr = document.createElement('tr');
@@ -100,6 +166,14 @@ document.addEventListener('DOMContentLoaded', () => {
                 <td>${app.email}</td>
                 <td>${app.gpa}</td>
                 <td><span class="status-badge">${app.track}</span></td>
+                <td>
+                    <select class="status-select" data-id="${app.id}">
+                        <option value="pending" ${app.status === 'pending' ? 'selected' : ''}>Pending</option>
+                        <option value="passed" ${app.status === 'passed' ? 'selected' : ''}>Passed</option>
+                        <option value="rejected" ${app.status === 'rejected' ? 'selected' : ''}>Rejected</option>
+                        <option value="further review" ${app.status === 'further review' ? 'selected' : ''}>Further Review</option>
+                    </select>
+                </td>
                 <td>
                     <button class="view-details-btn" data-index="${index}">View Responses</button>
                 </td>
@@ -111,9 +185,44 @@ document.addEventListener('DOMContentLoaded', () => {
         document.querySelectorAll('.view-details-btn').forEach(btn => {
             btn.addEventListener('click', (e) => {
                 const idx = e.target.getAttribute('data-index');
-                openModal(applicationsData[idx]);
+                openModal(displayedApplications[idx]);
             });
         });
+
+        // Status update listeners
+        document.querySelectorAll('.status-select').forEach(select => {
+            select.addEventListener('change', (e) => {
+                updateStatus(e.target.getAttribute('data-id'), e.target.value);
+            });
+        });
+    }
+
+    // --- Update Status API ---
+    async function updateStatus(id, newStatus) {
+        try {
+            const res = await fetch('/api/update-status', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${adminToken}`
+                },
+                body: JSON.stringify({ id, status: newStatus })
+            });
+
+            if (!res.ok) {
+                throw new Error('Failed to update status');
+            }
+
+            // Update local state
+            const app = applicationsData.find(a => a.id == id);
+            if (app) app.status = newStatus;
+
+        } catch (err) {
+            console.error(err);
+            alert('Failed to update status.');
+            // Refresh to revert UI changes
+            fetchApplications();
+        }
     }
 
     // --- Modal Logic ---

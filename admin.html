@@ -153,6 +153,63 @@
             line-height: 1.6;
             white-space: pre-wrap;
         }
+
+        .filters-container {
+            display: flex;
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+            background: rgba(255, 255, 255, 0.05);
+            padding: 1.5rem;
+            border-radius: var(--border-radius);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            align-items: flex-end;
+        }
+
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .filter-group label {
+            font-size: 0.85rem;
+            color: rgba(255, 255, 255, 0.7);
+            font-weight: 600;
+        }
+
+        .filter-group input,
+        .filter-group select {
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: white;
+            padding: 0.6rem;
+            border-radius: 6px;
+            font-family: var(--font-body);
+            font-size: 0.9rem;
+        }
+
+        .filter-group input:focus,
+        .filter-group select:focus {
+            outline: none;
+            border-color: var(--accent-light);
+        }
+
+        .status-select {
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: white;
+            padding: 0.4rem 0.6rem;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            font-family: var(--font-body);
+            cursor: pointer;
+        }
+
+        .status-select:focus {
+            outline: none;
+            border-color: var(--accent-color);
+        }
     </style>
 </head>
 
@@ -193,10 +250,46 @@
             </div>
 
             <div class="glass" style="padding: 2rem;">
-                <div style="display: flex; justify-content: space-between; align-items: center;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
                     <h3>Recent Applications</h3>
                     <button class="btn btn-outline" id="refresh-btn"><i class="fa-solid fa-arrows-rotate"></i>
                         Refresh</button>
+                </div>
+
+                <!-- Filters -->
+                <div class="filters-container" id="filters-container">
+                    <div class="filter-group">
+                        <label for="filter-date">Date Since</label>
+                        <input type="date" id="filter-date">
+                    </div>
+                    <div class="filter-group">
+                        <label for="filter-gpa">Min GPA</label>
+                        <input type="number" id="filter-gpa" step="0.1" min="0" max="4.0" placeholder="e.g. 3.0"
+                            style="width: 100px;">
+                    </div>
+                    <div class="filter-group">
+                        <label for="filter-track">Track</label>
+                        <select id="filter-track">
+                            <option value="">All Tracks</option>
+                            <option value="developer">Developer</option>
+                            <option value="researcher">Researcher</option>
+                            <option value="trader">Trader</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label for="filter-status">Status</label>
+                        <select id="filter-status">
+                            <option value="">All Statuses</option>
+                            <option value="pending">Pending</option>
+                            <option value="passed">Passed</option>
+                            <option value="rejected">Rejected</option>
+                            <option value="further review">Further Review</option>
+                        </select>
+                    </div>
+                    <div class="filter-group" style="margin-left: auto;">
+                        <button class="btn btn-outline" id="clear-filters" style="padding: 0.6rem 1rem;">Clear
+                            Filters</button>
+                    </div>
                 </div>
 
                 <div class="table-responsive">
@@ -208,13 +301,14 @@
                                 <th>Email</th>
                                 <th>GPA</th>
                                 <th>Track</th>
+                                <th>Status</th>
                                 <th>Actions</th>
                             </tr>
                         </thead>
                         <tbody id="applications-table-body">
                             <!-- Data populated by JS -->
                             <tr>
-                                <td colspan="6" style="text-align: center;">Loading applications...</td>
+                                <td colspan="7" style="text-align: center;">Loading applications...</td>
                             </tr>
                         </tbody>
                     </table>

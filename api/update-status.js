@@ -3,7 +3,7 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 export default async function handler(req, res) {
-    if (req.method !== 'GET') {
+    if (req.method !== 'POST') {
         return res.status(405).json({ message: 'Method Not Allowed' });
     }
 
@@ -19,23 +19,33 @@ export default async function handler(req, res) {
         return res.status(500).json({ error: 'Database is not configured.' });
     }
 
+    const { id, status } = req.body;
+    if (!id || !status) {
+        return res.status(400).json({ error: 'Missing id or status.' });
+    }
+
     try {
         const pool = new Pool({
             connectionString: process.env.DATABASE_URL,
             ssl: { rejectUnauthorized: false }
         });
 
-        // Ensure status column exists
+        // Ensure status column exists (in case it wasn't added yet)
         await pool.query("ALTER TABLE applications ADD COLUMN IF NOT EXISTS status VARCHAR(50) DEFAULT 'Pending';");
 
-        const query = 'SELECT * FROM applications ORDER BY created_at DESC;';
-        const result = await pool.query(query);
+        // Update the status
+        const updateQuery = 'UPDATE applications SET status = $1 WHERE id = $2 RETURNING *;';
+        const result = await pool.query(updateQuery, [status, id]);
 
         await pool.end();
 
-        return res.status(200).json(result.rows);
+        if (result.rowCount === 0) {
+            return res.status(404).json({ error: 'Application not found.' });
+        }
+
+        return res.status(200).json({ message: 'Status updated successfully', application: result.rows[0] });
     } catch (error) {
         console.error("Database Error:", error);
-        return res.status(500).json({ error: 'Failed to fetch applications' });
+        return res.status(500).json({ error: 'Failed to update application status' });
     }
 }

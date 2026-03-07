@@ -1858,3 +1858,91 @@ a {
 .log-entry.system {
     color: var(--accent-secondary);
 }
+
+/* =========================================
+   COMPETITION TABS & ESTIMATHON / MATH
+   ========================================= */
+
+.comp-nav {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.comp-tab-btn {
+    background: transparent;
+    border: 1px solid var(--border-glass);
+    color: var(--text-muted);
+    padding: 0.5rem 1.5rem;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: var(--transition);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.comp-tab-btn:hover {
+    color: var(--text-main);
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.comp-tab-btn.active {
+    background: var(--accent-gradient);
+    color: white;
+    border-color: transparent;
+    box-shadow: 0 4px 15px rgba(255, 51, 68, 0.3);
+}
+
+/* Common form input text alignment helper */
+.text-center {
+    text-align: center;
+}
+
+/* Mental Math Float Animation */
+@keyframes float-up {
+    0% {
+        transform: translateY(0);
+        opacity: 1;
+    }
+
+    100% {
+        transform: translateY(-50px);
+        opacity: 0;
+    }
+}
+
+.float-anim {
+    animation: float-up 0.8s ease-out forwards;
+}
+
+/* Flash backgrounds for correct/incorrect answers */
+.flash-bg-success {
+    animation: flash-green-bg 0.5s ease;
+}
+
+.flash-bg-error {
+    animation: flash-red-bg 0.5s ease;
+}
+
+@keyframes flash-green-bg {
+    0% {
+        background-color: rgba(0, 255, 136, 0.2);
+    }
+
+    100% {
+        background-color: transparent;
+    }
+}
+
+@keyframes flash-red-bg {
+    0% {
+        background-color: rgba(255, 51, 68, 0.2);
+    }
+
+    100% {
+        background-color: transparent;
+    }
+}

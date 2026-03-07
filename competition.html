@@ -49,185 +49,386 @@
     <main class="competition-main container">
         <div class="dashboard-header reveal">
             <div>
-                <h2>Market Maker <span class="accent">Terminal</span></h2>
-                <p class="section-subtitle" style="margin-left: 0; text-align: left; margin-top: 0.5rem;">Simulate
-                    liquidity provision and order execution against a live LOB.</p>
+                <h2>Trading <span class="accent">Competition Hub</span></h2>
+                <p class="section-subtitle" style="margin-left: 0; text-align: left; margin-top: 0.5rem;">Select an
+                    event below to begin.</p>
             </div>
-            <div class="portfolio-summary glass">
-                <div class="summary-item">
-                    <span class="summary-label">Available Buying Power</span>
-                    <span class="summary-value" id="cash-balance">$100,000.00</span>
+
+            <!-- Competition Navigation -->
+            <div class="comp-nav">
+                <button class="comp-tab-btn active" data-target="tab-market-maker"><i
+                        class="fa-solid fa-chart-line"></i> Market Making</button>
+                <button class="comp-tab-btn" data-target="tab-estimathon"><i class="fa-solid fa-scale-balanced"></i>
+                    Estimathon</button>
+                <button class="comp-tab-btn" data-target="tab-mental-math"><i class="fa-solid fa-calculator"></i> Mental
+                    Math</button>
+                <button class="comp-tab-btn" data-target="tab-patterns"><i class="fa-solid fa-shapes"></i> Pattern
+                    Recognition</button>
+            </div>
+        </div>
+
+        <!-- 1. MARKET MAKER TERMINAL -->
+        <div id="tab-market-maker" class="comp-section active">
+            <div class="dashboard-header">
+                <div>
+                    <h2>Market Maker <span class="accent">Terminal</span></h2>
+                    <p class="section-subtitle" style="margin-left: 0; text-align: left; margin-top: 0.5rem;">Simulate
+                        liquidity provision and order execution against a live LOB.</p>
                 </div>
-                <div class="summary-item">
-                    <span class="summary-label">Open P&L</span>
-                    <span class="summary-value positive" id="open-pnl">+$0.00</span>
+                <div class="portfolio-summary glass">
+                    <div class="summary-item">
+                        <span class="summary-label">Available Buying Power</span>
+                        <span class="summary-value" id="cash-balance">$100,000.00</span>
+                    </div>
+                    <div class="summary-item">
+                        <span class="summary-label">Open P&L</span>
+                        <span class="summary-value positive" id="open-pnl">+$0.00</span>
+                    </div>
+                    <div class="summary-item">
+                        <span class="summary-label">Realized P&L</span>
+                        <span class="summary-value neutral" id="realized-pnl">$0.00</span>
+                    </div>
                 </div>
-                <div class="summary-item">
-                    <span class="summary-label">Realized P&L</span>
-                    <span class="summary-value neutral" id="realized-pnl">$0.00</span>
+            </div>
+
+            <div class="terminal-grid">
+                <!-- Left Column: Market Data & Chart -->
+                <div class="terminal-col-left">
+                    <!-- Instrument Selector & Ticker -->
+                    <div class="glass panel">
+                        <div class="panel-header">
+                            <h3><i class="fa-solid fa-chart-candlestick"></i> Market Overview</h3>
+                            <div class="instrument-selector">
+                                <button class="instrument-btn active" data-asset="AQ_IDX">AQ Index</button>
+                                <button class="instrument-btn" data-asset="FUT_DEC">DEC Futures</button>
+                                <button class="instrument-btn" data-asset="OPT_CALL">110C Options</button>
+                            </div>
+                        </div>
+                        <div class="ticker-display">
+                            <div class="ticker-symbol">AQ_IDX</div>
+                            <div class="ticker-price" id="last-price">100.00</div>
+                            <div class="ticker-change positive" id="price-change">+0.00 (+0.00%)</div>
+                        </div>
+                        <!-- Placeholder for Chart -->
+                        <div class="chart-container">
+                            <div class="chart-placeholder">
+                                <div class="price-line" id="sim-chart-line"></div>
+                                <span class="chart-label">Real-time Price Simulation</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Order Book (Level 2) -->
+                    <div class="glass panel ob-panel">
+                        <div class="panel-header">
+                            <h3><i class="fa-solid fa-book-open"></i> Central Limit Order Book</h3>
+                            <span class="spread-indicator">Spread: <span id="current-spread">0.05</span></span>
+                        </div>
+                        <div class="order-book">
+                            <div class="ob-header">
+                                <span>Mkt Size</span>
+                                <span>Price</span>
+                                <span>My Size</span>
+                            </div>
+
+                            <!-- Asks (Sells) -->
+                            <div class="ob-asks" id="ob-asks-container">
+                                <!-- Populated by JS -->
+                            </div>
+
+                            <!-- Mid Spread -->
+                            <div class="ob-midpoint">
+                                <span class="mid-price" id="mid-price-display">--</span>
+                            </div>
+
+                            <!-- Bids (Buys) -->
+                            <div class="ob-bids" id="ob-bids-container">
+                                <!-- Populated by JS -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right Column: Entry & Positions -->
+                <div class="terminal-col-right">
+                    <!-- Order Entry -->
+                    <div class="glass panel order-entry-panel">
+                        <div class="panel-header">
+                            <h3><i class="fa-solid fa-bolt"></i> Order Entry</h3>
+                        </div>
+                        <form id="order-form" class="order-form">
+                            <div class="order-tabs">
+                                <button type="button" class="order-tab active" data-type="limit">Limit</button>
+                                <button type="button" class="order-tab" data-type="market">Market</button>
+                            </div>
+
+                            <div class="form-group flex-row">
+                                <div class="input-wrap w-50">
+                                    <label>Quantity</label>
+                                    <input type="number" id="order-qty" class="input-field mono-num" value="100" min="1"
+                                        step="1">
+                                </div>
+                                <div class="input-wrap w-50" id="price-input-group">
+                                    <label>Price</label>
+                                    <input type="number" id="order-price" class="input-field mono-num" value="100.00"
+                                        step="0.01">
+                                </div>
+                            </div>
+
+                            <div class="order-summary-calc">
+                                <span>Estimated Value:</span>
+                                <span id="est-order-value" class="mono-num">$10,000.00</span>
+                            </div>
+
+                            <div class="order-actions">
+                                <button type="button" class="btn btn-primary buy-btn" id="btn-buy">Buy / Bid</button>
+                                <button type="button" class="btn btn-primary sell-btn" id="btn-sell">Sell / Ask</button>
+                            </div>
+                        </form>
+                    </div>
+
+                    <!-- Active Positions -->
+                    <div class="glass panel positions-panel">
+                        <div class="panel-header">
+                            <h3><i class="fa-solid fa-briefcase"></i> Positions</h3>
+                        </div>
+                        <div class="table-container">
+                            <table class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th>Asset</th>
+                                        <th>Qty</th>
+                                        <th>Avg Px</th>
+                                        <th>Mkt Px</th>
+                                        <th>Unrealized PnL</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="positions-table-body">
+                                    <!-- Populated by JS -->
+                                    <tr class="empty-row">
+                                        <td colspan="5">No active positions</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- Working Orders -->
+                    <div class="glass panel working-orders-panel">
+                        <div class="panel-header">
+                            <h3><i class="fa-regular fa-clock"></i> Working Orders</h3>
+                            <button class="btn-cancel-all" id="btn-cancel-all">Cancel All</button>
+                        </div>
+                        <div class="table-container list-view">
+                            <table class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th>Side</th>
+                                        <th>Px</th>
+                                        <th>Qty</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="working-orders-body">
+                                    <!-- Populated by JS -->
+                                    <tr class="empty-row">
+                                        <td colspan="4">No working orders</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- Activity Log -->
+                    <div class="glass panel activity-panel">
+                        <div class="panel-header">
+                            <h3><i class="fa-solid fa-list"></i> Activity Log</h3>
+                        </div>
+                        <div class="log-container" id="activity-log">
+                            <div class="log-entry system"><span class="log-time">System</span> Exchange initialized.
+                                Waiting
+                                for connection...</div>
+                        </div>
+                    </div>
+
                 </div>
             </div>
         </div>
 
-        <div class="terminal-grid">
-            <!-- Left Column: Market Data & Chart -->
-            <div class="terminal-col-left">
-                <!-- Instrument Selector & Ticker -->
-                <div class="glass panel">
-                    <div class="panel-header">
-                        <h3><i class="fa-solid fa-chart-candlestick"></i> Market Overview</h3>
-                        <div class="instrument-selector">
-                            <button class="instrument-btn active" data-asset="AQ_IDX">AQ Index</button>
-                            <button class="instrument-btn" data-asset="FUT_DEC">DEC Futures</button>
-                            <button class="instrument-btn" data-asset="OPT_CALL">110C Options</button>
-                        </div>
-                    </div>
-                    <div class="ticker-display">
-                        <div class="ticker-symbol">AQ_IDX</div>
-                        <div class="ticker-price" id="last-price">100.00</div>
-                        <div class="ticker-change positive" id="price-change">+0.00 (+0.00%)</div>
-                    </div>
-                    <!-- Placeholder for Chart -->
-                    <div class="chart-container">
-                        <div class="chart-placeholder">
-                            <div class="price-line" id="sim-chart-line"></div>
-                            <span class="chart-label">Real-time Price Simulation</span>
-                        </div>
-                    </div>
+        <!-- 2. ESTIMATHON -->
+        <div id="tab-estimathon" class="comp-section" style="display: none;">
+            <div class="glass panel estimathon-panel" style="max-width: 800px; margin: 0 auto; min-height: 500px;">
+                <div class="panel-header">
+                    <h3><i class="fa-solid fa-scale-balanced"></i> Estimathon</h3>
+                    <span class="spread-indicator">Question <span id="est-current-q">1</span> / <span
+                            id="est-total-q">10</span></span>
                 </div>
 
-                <!-- Order Book (Level 2) -->
-                <div class="glass panel ob-panel">
-                    <div class="panel-header">
-                        <h3><i class="fa-solid fa-book-open"></i> Central Limit Order Book</h3>
-                        <span class="spread-indicator">Spread: <span id="current-spread">0.05</span></span>
+                <div id="est-game-area" class="est-content" style="padding: 3rem 2rem; text-align: center;">
+                    <h2 id="est-question-text" style="font-size: 2rem; margin-bottom: 2rem;">Loading Question...</h2>
+
+                    <div class="form-group flex-row"
+                        style="justify-content: center; gap: 2rem; max-width: 500px; margin: 0 auto 2rem;">
+                        <div class="input-wrap w-50">
+                            <label>Lower Bound</label>
+                            <input type="number" id="est-lower" class="input-field mono-num" placeholder="e.g. 1000"
+                                style="text-align: center; font-size: 1.2rem;">
+                        </div>
+                        <div class="input-wrap w-50">
+                            <label>Upper Bound</label>
+                            <input type="number" id="est-upper" class="input-field mono-num" placeholder="e.g. 5000"
+                                style="text-align: center; font-size: 1.2rem;">
+                        </div>
                     </div>
-                    <div class="order-book">
-                        <div class="ob-header">
-                            <span>Mkt Size</span>
-                            <span>Price</span>
-                            <span>My Size</span>
-                        </div>
 
-                        <!-- Asks (Sells) -->
-                        <div class="ob-asks" id="ob-asks-container">
-                            <!-- Populated by JS -->
-                        </div>
+                    <button id="est-submit-btn" class="btn btn-primary"
+                        style="font-size: 1.2rem; padding: 1rem 3rem;">Submit Bounds</button>
 
-                        <!-- Mid Spread -->
-                        <div class="ob-midpoint">
-                            <span class="mid-price" id="mid-price-display">--</span>
-                        </div>
+                    <div class="est-feedback" id="est-feedback"
+                        style="margin-top: 2rem; min-height: 40px; font-size: 1.2rem; font-weight: bold;"></div>
+                </div>
 
-                        <!-- Bids (Buys) -->
-                        <div class="ob-bids" id="ob-bids-container">
-                            <!-- Populated by JS -->
-                        </div>
+                <div id="est-results-area" class="est-content" style="display: none; padding: 2rem;">
+                    <h2 class="accent" style="text-align: center; margin-bottom: 1rem;">Estimathon Review</h2>
+                    <h3 style="text-align: center; margin-bottom: 2rem;">Final Score: <span id="est-final-score"
+                            class="positive">0</span> Points</h3>
+                    <div class="table-container list-view" style="max-height: 350px;">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Question</th>
+                                    <th>Your Range</th>
+                                    <th>Actual</th>
+                                    <th>Points</th>
+                                </tr>
+                            </thead>
+                            <tbody id="est-results-body">
+                                <!-- Populated dynamically -->
+                            </tbody>
+                        </table>
+                    </div>
+                    <div style="text-align: center; margin-top: 2rem;">
+                        <button id="est-restart-btn" class="btn btn-secondary">Play Again</button>
                     </div>
                 </div>
             </div>
+        </div>
 
-            <!-- Right Column: Entry & Positions -->
-            <div class="terminal-col-right">
-                <!-- Order Entry -->
-                <div class="glass panel order-entry-panel">
-                    <div class="panel-header">
-                        <h3><i class="fa-solid fa-bolt"></i> Order Entry</h3>
-                    </div>
-                    <form id="order-form" class="order-form">
-                        <div class="order-tabs">
-                            <button type="button" class="order-tab active" data-type="limit">Limit</button>
-                            <button type="button" class="order-tab" data-type="market">Market</button>
-                        </div>
-
-                        <div class="form-group flex-row">
-                            <div class="input-wrap w-50">
-                                <label>Quantity</label>
-                                <input type="number" id="order-qty" class="input-field mono-num" value="100" min="1"
-                                    step="1">
-                            </div>
-                            <div class="input-wrap w-50" id="price-input-group">
-                                <label>Price</label>
-                                <input type="number" id="order-price" class="input-field mono-num" value="100.00"
-                                    step="0.01">
-                            </div>
-                        </div>
-
-                        <div class="order-summary-calc">
-                            <span>Estimated Value:</span>
-                            <span id="est-order-value" class="mono-num">$10,000.00</span>
-                        </div>
-
-                        <div class="order-actions">
-                            <button type="button" class="btn btn-primary buy-btn" id="btn-buy">Buy / Bid</button>
-                            <button type="button" class="btn btn-primary sell-btn" id="btn-sell">Sell / Ask</button>
-                        </div>
-                    </form>
-                </div>
-
-                <!-- Active Positions -->
-                <div class="glass panel positions-panel">
-                    <div class="panel-header">
-                        <h3><i class="fa-solid fa-briefcase"></i> Positions</h3>
-                    </div>
-                    <div class="table-container">
-                        <table class="data-table">
-                            <thead>
-                                <tr>
-                                    <th>Asset</th>
-                                    <th>Qty</th>
-                                    <th>Avg Px</th>
-                                    <th>Mkt Px</th>
-                                    <th>Unrealized PnL</th>
-                                </tr>
-                            </thead>
-                            <tbody id="positions-table-body">
-                                <!-- Populated by JS -->
-                                <tr class="empty-row">
-                                    <td colspan="5">No active positions</td>
-                                </tr>
-                            </tbody>
-                        </table>
+        <!-- 3. MENTAL MATH -->
+        <div id="tab-mental-math" class="comp-section" style="display: none;">
+            <div class="glass panel math-panel"
+                style="max-width: 800px; margin: 0 auto; min-height: 500px; display: flex; flex-direction: column;">
+                <div class="panel-header">
+                    <h3><i class="fa-solid fa-calculator"></i> Mental Math</h3>
+                    <div class="math-stats" style="display: flex; gap: 2rem;">
+                        <span class="spread-indicator" style="font-size: 1.2rem;">Score: <span id="math-score"
+                                class="positive">0</span></span>
+                        <span class="spread-indicator" style="font-size: 1.2rem;">Time: <span id="math-timer"
+                                class="mono-num">120</span>s</span>
                     </div>
                 </div>
 
-                <!-- Working Orders -->
-                <div class="glass panel working-orders-panel">
-                    <div class="panel-header">
-                        <h3><i class="fa-regular fa-clock"></i> Working Orders</h3>
-                        <button class="btn-cancel-all" id="btn-cancel-all">Cancel All</button>
+                <div id="math-intro-area" class="math-content" style="padding: 4rem 2rem; text-align: center; flex: 1;">
+                    <i class="fa-solid fa-bolt"
+                        style="font-size: 4rem; color: var(--accent-secondary); margin-bottom: 1.5rem;"></i>
+                    <h2 style="margin-bottom: 1rem;">Lightning Arithmetic</h2>
+                    <p style="color: var(--text-muted); margin-bottom: 3rem; max-width: 500px; margin-inline: auto;">
+                        Solve as many arithmetic problems as you can in 120 seconds. Press Enter to submit.</p>
+                    <button id="math-start-btn" class="btn btn-primary"
+                        style="font-size: 1.5rem; padding: 1rem 4rem;">Start Game</button>
+                </div>
+
+                <div id="math-game-area" class="math-content"
+                    style="display: none; padding: 4rem 2rem; text-align: center; flex: 1; position: relative;">
+                    <!-- Floating point indicators -->
+                    <div id="math-float-score"
+                        style="position: absolute; top: 10%; right: 20%; font-size: 2rem; font-weight: bold; opacity: 0; transition: all 0.5s ease; color: #00ff88;">
+                        +1</div>
+
+                    <div style="font-size: 1.2rem; color: var(--text-muted); margin-bottom: 1rem;"
+                        id="math-question-type">Arithmetic</div>
+                    <div id="math-expression"
+                        style="font-family: 'JetBrains Mono', monospace; font-size: 4.5rem; font-weight: 700; margin-bottom: 3rem; letter-spacing: 2px;">
+                        12 &times; 14
                     </div>
-                    <div class="table-container list-view">
-                        <table class="data-table">
-                            <thead>
-                                <tr>
-                                    <th>Side</th>
-                                    <th>Px</th>
-                                    <th>Qty</th>
-                                    <th>Action</th>
-                                </tr>
-                            </thead>
-                            <tbody id="working-orders-body">
-                                <!-- Populated by JS -->
-                                <tr class="empty-row">
-                                    <td colspan="4">No working orders</td>
-                                </tr>
-                            </tbody>
-                        </table>
+
+                    <div style="max-width: 300px; margin: 0 auto;">
+                        <input type="number" id="math-answer" class="input-field mono-num"
+                            style="font-size: 2.5rem; text-align: center; padding: 1rem; width: 100%; border-radius: 12px; background: rgba(0,0,0,0.5);"
+                            autocomplete="off">
                     </div>
                 </div>
 
-                <!-- Activity Log -->
-                <div class="glass panel activity-panel">
-                    <div class="panel-header">
-                        <h3><i class="fa-solid fa-list"></i> Activity Log</h3>
+                <div id="math-results-area" class="math-content"
+                    style="display: none; padding: 4rem 2rem; text-align: center; flex: 1;">
+                    <h2 style="margin-bottom: 1rem;">Time's Up!</h2>
+                    <p style="color: var(--text-muted); font-size: 1.2rem; margin-bottom: 2rem;">Your mind is sharp.</p>
+                    <div class="stat-num" style="font-size: 5rem; margin-bottom: 3rem;" id="math-final-score">0</div>
+
+                    <div style="display: flex; justify-content: center; gap: 2rem;">
+                        <button id="math-restart-btn" class="btn btn-primary">Play Again</button>
                     </div>
-                    <div class="log-container" id="activity-log">
-                        <div class="log-entry system"><span class="log-time">System</span> Exchange initialized. Waiting
-                            for connection...</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 4. PATTERNS -->
+        <div id="tab-patterns" class="comp-section" style="display: none;">
+            <div class="glass panel math-panel"
+                style="max-width: 800px; margin: 0 auto; min-height: 500px; display: flex; flex-direction: column;">
+                <div class="panel-header">
+                    <h3><i class="fa-solid fa-shapes"></i> Pattern Recognition</h3>
+                    <div class="math-stats" style="display: flex; gap: 2rem;">
+                        <span class="spread-indicator" style="font-size: 1.2rem;">Score: <span id="pattern-score"
+                                class="positive">0</span></span>
+                        <span class="spread-indicator" style="font-size: 1.2rem;">Time: <span id="pattern-timer"
+                                class="mono-num">120</span>s</span>
                     </div>
                 </div>
 
+                <div id="pattern-intro-area" class="math-content"
+                    style="padding: 4rem 2rem; text-align: center; flex: 1;">
+                    <i class="fa-solid fa-link"
+                        style="font-size: 4rem; color: var(--accent-secondary); margin-bottom: 1.5rem;"></i>
+                    <h2 style="margin-bottom: 1rem;">Sequence Decoding</h2>
+                    <p style="color: var(--text-muted); margin-bottom: 3rem; max-width: 500px; margin-inline: auto;">
+                        Find the missing number in the sequence before time runs out. Press Enter to submit.</p>
+                    <button id="pattern-start-btn" class="btn btn-primary"
+                        style="font-size: 1.5rem; padding: 1rem 4rem;">Start Game</button>
+                </div>
+
+                <div id="pattern-game-area" class="math-content"
+                    style="display: none; padding: 4rem 2rem; text-align: center; flex: 1; position: relative;">
+                    <!-- Floating point indicators -->
+                    <div id="pattern-float-score"
+                        style="position: absolute; top: 10%; right: 20%; font-size: 2rem; font-weight: bold; opacity: 0; transition: all 0.5s ease; color: #00ff88;">
+                        +5</div>
+
+                    <div style="font-size: 1.2rem; color: var(--text-muted); margin-bottom: 1rem;"
+                        id="pattern-question-type">Pattern Sequence</div>
+                    <div id="pattern-expression"
+                        style="font-family: 'JetBrains Mono', monospace; font-size: 4.5rem; font-weight: 700; margin-bottom: 3rem; letter-spacing: 2px;">
+                        2, 4, 8, 16, <span class="accent">?</span>
+                    </div>
+
+                    <div style="max-width: 300px; margin: 0 auto;">
+                        <input type="number" id="pattern-answer" class="input-field mono-num"
+                            style="font-size: 2.5rem; text-align: center; padding: 1rem; width: 100%; border-radius: 12px; background: rgba(0,0,0,0.5);"
+                            autocomplete="off">
+                    </div>
+                </div>
+
+                <div id="pattern-results-area" class="math-content"
+                    style="display: none; padding: 4rem 2rem; text-align: center; flex: 1;">
+                    <h2 style="margin-bottom: 1rem;">Time's Up!</h2>
+                    <p style="color: var(--text-muted); font-size: 1.2rem; margin-bottom: 2rem;">Excellent eye for
+                        numbers.</p>
+                    <div class="stat-num" style="font-size: 5rem; margin-bottom: 3rem;" id="pattern-final-score">0</div>
+
+                    <div style="display: flex; justify-content: center; gap: 2rem;">
+                        <button id="pattern-restart-btn" class="btn btn-primary">Play Again</button>
+                    </div>
+                </div>
             </div>
         </div>
     </main>
@@ -247,7 +448,39 @@
 
     <!-- Scripts -->
     <script src="script.js"></script>
+    <script>
+        // Tab switching logic
+        document.addEventListener('DOMContentLoaded', () => {
+            const tabBtns = document.querySelectorAll('.comp-tab-btn');
+            const sections = document.querySelectorAll('.comp-section');
+
+            tabBtns.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    // Remove active class from all
+                    tabBtns.forEach(b => b.classList.remove('active'));
+                    sections.forEach(s => s.style.display = 'none');
+
+                    // Add active class to clicked
+                    btn.classList.add('active');
+                    const targetId = btn.getAttribute('data-target');
+                    document.getElementById(targetId).style.display = 'block';
+
+                    // Specific app hooks (focusing inputs)
+                    if (targetId === 'tab-estimathon') {
+                        setTimeout(() => document.getElementById('est-lower').focus(), 100);
+                    } else if (targetId === 'tab-mental-math' && document.getElementById('math-game-area').style.display !== 'none') {
+                        setTimeout(() => document.getElementById('math-answer').focus(), 100);
+                    } else if (targetId === 'tab-patterns' && document.getElementById('pattern-game-area').style.display !== 'none') {
+                        setTimeout(() => document.getElementById('pattern-answer').focus(), 100);
+                    }
+                });
+            });
+        });
+    </script>
     <script src="competition.js"></script>
+    <script src="estimathon.js"></script>
+    <script src="mentalmath.js"></script>
+    <script src="patterns.js"></script>
 </body>
 
 </html>

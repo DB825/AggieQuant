@@ -1946,3 +1946,53 @@ a {
         background-color: transparent;
     }
 }
+
+/* =========================================
+   LEADERBOARD & DIFFICULTY SELECTOR
+   ========================================= */
+
+.lb-section {
+    border-top: 1px solid var(--border-glass);
+}
+
+.lb-section h4 {
+    font-weight: 600;
+    color: var(--text-main);
+}
+
+.lb-section h4 i {
+    color: #ffd700;
+    margin-right: 0.5rem;
+}
+
+.lb-table {
+    width: 100%;
+}
+
+.lb-table thead th {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.lb-top td {
+    color: #ffd700 !important;
+    font-weight: 600;
+}
+
+.difficulty-selector select {
+    background: rgba(0, 0, 0, 0.4);
+    border: 1px solid var(--border-glass);
+    color: var(--text-main);
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.difficulty-selector select:hover {
+    border-color: var(--accent-secondary);
+}
+
+.difficulty-selector select option {
+    background: var(--bg-primary);
+    color: var(--text-main);
+}

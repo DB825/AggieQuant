@@ -311,6 +311,12 @@
                         <button id="est-restart-btn" class="btn btn-secondary">Play Again</button>
                     </div>
                 </div>
+
+                <!-- Leaderboard -->
+                <div class="lb-section" style="padding: 1.5rem;">
+                    <h4 style="margin-bottom: 1rem;"><i class="fa-solid fa-trophy"></i> Leaderboard</h4>
+                    <div id="est-leaderboard" class="table-container list-view" style="max-height: 250px;"></div>
+                </div>
             </div>
         </div>
 
@@ -332,8 +338,19 @@
                     <i class="fa-solid fa-bolt"
                         style="font-size: 4rem; color: var(--accent-secondary); margin-bottom: 1.5rem;"></i>
                     <h2 style="margin-bottom: 1rem;">Lightning Arithmetic</h2>
-                    <p style="color: var(--text-muted); margin-bottom: 3rem; max-width: 500px; margin-inline: auto;">
-                        Solve as many arithmetic problems as you can in 120 seconds. Press Enter to submit.</p>
+                    <p style="color: var(--text-muted); margin-bottom: 2rem; max-width: 500px; margin-inline: auto;">
+                        Solve as many arithmetic problems as you can before time runs out. Press Enter to submit.</p>
+
+                    <div class="difficulty-selector" style="margin-bottom: 2rem;">
+                        <label style="color: var(--text-muted); margin-right: 0.5rem;">Difficulty:</label>
+                        <select id="math-difficulty" class="input-field"
+                            style="width: auto; display: inline-block; padding: 0.5rem 1.5rem; font-size: 1rem; border-radius: 8px;">
+                            <option value="easy">Easy (2-digit, +/−)</option>
+                            <option value="medium" selected>Medium (3-digit, +/−/×)</option>
+                            <option value="hard">Hard (4-digit, +/−/×/÷, 90s)</option>
+                        </select>
+                    </div>
+
                     <button id="math-start-btn" class="btn btn-primary"
                         style="font-size: 1.5rem; padding: 1rem 4rem;">Start Game</button>
                 </div>
@@ -369,6 +386,12 @@
                         <button id="math-restart-btn" class="btn btn-primary">Play Again</button>
                     </div>
                 </div>
+
+                <!-- Leaderboard -->
+                <div class="lb-section" style="padding: 1.5rem;">
+                    <h4 style="margin-bottom: 1rem;"><i class="fa-solid fa-trophy"></i> Leaderboard</h4>
+                    <div id="math-leaderboard" class="table-container list-view" style="max-height: 250px;"></div>
+                </div>
             </div>
         </div>
 
@@ -391,8 +414,19 @@
                     <i class="fa-solid fa-link"
                         style="font-size: 4rem; color: var(--accent-secondary); margin-bottom: 1.5rem;"></i>
                     <h2 style="margin-bottom: 1rem;">Sequence Decoding</h2>
-                    <p style="color: var(--text-muted); margin-bottom: 3rem; max-width: 500px; margin-inline: auto;">
+                    <p style="color: var(--text-muted); margin-bottom: 2rem; max-width: 500px; margin-inline: auto;">
                         Find the missing number in the sequence before time runs out. Press Enter to submit.</p>
+
+                    <div class="difficulty-selector" style="margin-bottom: 2rem;">
+                        <label style="color: var(--text-muted); margin-right: 0.5rem;">Difficulty:</label>
+                        <select id="pattern-difficulty" class="input-field"
+                            style="width: auto; display: inline-block; padding: 0.5rem 1.5rem; font-size: 1rem; border-radius: 8px;">
+                            <option value="easy">Easy (Geometric only)</option>
+                            <option value="medium" selected>Medium (Fib/Geo/Squares)</option>
+                            <option value="hard">Hard (+ Cubes/Triangular, 90s)</option>
+                        </select>
+                    </div>
+
                     <button id="pattern-start-btn" class="btn btn-primary"
                         style="font-size: 1.5rem; padding: 1rem 4rem;">Start Game</button>
                 </div>
@@ -428,6 +462,12 @@
                     <div style="display: flex; justify-content: center; gap: 2rem;">
                         <button id="pattern-restart-btn" class="btn btn-primary">Play Again</button>
                     </div>
+                </div>
+
+                <!-- Leaderboard -->
+                <div class="lb-section" style="padding: 1.5rem;">
+                    <h4 style="margin-bottom: 1rem;"><i class="fa-solid fa-trophy"></i> Leaderboard</h4>
+                    <div id="pattern-leaderboard" class="table-container list-view" style="max-height: 250px;"></div>
                 </div>
             </div>
         </div>
@@ -477,6 +517,7 @@
             });
         });
     </script>
+    <script src="leaderboard.js"></script>
     <script src="competition.js"></script>
     <script src="estimathon.js"></script>
     <script src="mentalmath.js"></script>

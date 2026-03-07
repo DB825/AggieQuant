@@ -81,11 +81,28 @@ document.addEventListener('DOMContentLoaded', () => {
     const fileInput = document.getElementById('resume');
     const successMsg = document.getElementById('resume-success-msg');
     const fileNameSpan = document.getElementById('attached-file-name');
+    const formErrorMsg = document.getElementById('form-error-msg');
+    const errorText = document.getElementById('error-text');
 
     if (fileInput && successMsg && fileNameSpan) {
         fileInput.addEventListener('change', (e) => {
+            if (formErrorMsg) formErrorMsg.style.display = 'none';
+
             if (e.target.files && e.target.files.length > 0) {
-                const fileName = e.target.files[0].name;
+                const file = e.target.files[0];
+
+                // Real-time limit check
+                if (file.size > 4 * 1024 * 1024) {
+                    if (formErrorMsg && errorText) {
+                        errorText.textContent = 'Your resume exceeds the 4MB limit. Please upload a smaller PDF file.';
+                        formErrorMsg.style.display = 'block';
+                        fileInput.value = ''; // clear invalid file
+                        successMsg.style.display = 'none';
+                        return;
+                    }
+                }
+
+                const fileName = file.name;
                 fileNameSpan.textContent = fileName;
                 successMsg.style.display = 'block';
             } else {
@@ -96,24 +113,66 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // 5. Custom Form Validation (Apply Page)
     const applyForm = document.querySelector('.apply-form');
-    const formErrorMsg = document.getElementById('form-error-msg');
-    const errorText = document.getElementById('error-text');
 
     if (applyForm) {
+        applyForm.setAttribute('novalidate', true);
+
         applyForm.addEventListener('submit', function (e) {
             let isValid = true;
             let errorMessage = '';
 
             const gpaInput = document.getElementById('gpa');
-            const fileInput = document.getElementById('resume');
 
             // Reset error
             if (formErrorMsg) formErrorMsg.style.display = 'none';
 
-            // Custom validation logic
-            if (gpaInput) {
+            // 1. Check basic required fields and formats
+            const requiredFields = applyForm.querySelectorAll('[required]');
+            for (let i = 0; i < requiredFields.length; i++) {
+                const field = requiredFields[i];
+
+                let fieldName = field.name;
+                if (field.id) {
+                    const label = document.querySelector(`label[for="${field.id}"]`);
+                    if (label) {
+                        // Strip out asterisks and generic text
+                        fieldName = label.textContent.replace('*', '').replace('(PDF only)', '').trim();
+                    }
+                } else if (field.type === 'radio') {
+                    fieldName = 'Track Preference';
+                }
+
+                if (field.type === 'radio') {
+                    const radioGroup = applyForm.querySelectorAll(`input[name="${field.name}"]`);
+                    const isChecked = Array.from(radioGroup).some(radio => radio.checked);
+                    if (!isChecked) {
+                        isValid = false;
+                        errorMessage = `Please select a ${fieldName}.`;
+                        break;
+                    }
+                } else if (field.type === 'file') {
+                    if (!field.files || field.files.length === 0) {
+                        isValid = false;
+                        errorMessage = `The field "${fieldName}" is required.`;
+                        break;
+                    }
+                } else if (!field.value.trim()) {
+                    isValid = false;
+                    errorMessage = `The field "${fieldName}" is required.`;
+                    break;
+                } else if (field.type === 'email') {
+                    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                    if (!emailRegex.test(field.value.trim())) {
+                        isValid = false;
+                        errorMessage = `Please enter a valid email address for "${fieldName}".`;
+                        break;
+                    }
+                }
+            }
+
+            // 2. Specific validations
+            if (isValid && gpaInput) {
                 const gpaValue = parseFloat(gpaInput.value);
-                // HTML5 should already stop non-numbers, but this ensures ranges and decimal validity manually
                 if (isNaN(gpaValue) || gpaValue < 0.0 || gpaValue > 4.0) {
                     isValid = false;
                     errorMessage = 'GPA must be a valid decimal number between 0.00 and 4.00.';
@@ -125,11 +184,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (file.type !== 'application/pdf' && !file.name.toLowerCase().endsWith('.pdf')) {
                     isValid = false;
                     errorMessage = 'Incorrect file type. Please submit your resume in PDF format only.';
+                } else if (file.size > 4 * 1024 * 1024) { // 4MB limit
+                    isValid = false;
+                    errorMessage = 'Your resume exceeds the 4MB limit. Please upload a smaller PDF file.';
                 }
-            } else if (isValid && (!fileInput || fileInput.files.length === 0)) {
-                // If they bypassed the 'required' HTML attribute somehow
-                isValid = false;
-                errorMessage = 'Please attach your resume.';
             }
 
             if (!isValid) {
@@ -137,7 +195,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (formErrorMsg && errorText) {
                     errorText.textContent = errorMessage;
                     formErrorMsg.style.display = 'block';
-                    // Scroll to error
                     formErrorMsg.scrollIntoView({ behavior: 'smooth', block: 'center' });
                 } else {
                     alert(errorMessage);

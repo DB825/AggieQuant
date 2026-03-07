@@ -40,16 +40,10 @@ document.addEventListener('DOMContentLoaded', () => {
         resultsArea: document.getElementById('est-results-area'),
         finalScore: document.getElementById('est-final-score'),
         resultsBody: document.getElementById('est-results-body'),
-        btnRestart: document.getElementById('est-restart-btn'),
-        leaderboardContainer: document.getElementById('est-leaderboard')
+        btnRestart: document.getElementById('est-restart-btn')
     };
 
     if (!ui.btnSubmit) return; // Fail safe if not on competition page
-
-    // Render initial leaderboard
-    if (typeof Leaderboard !== 'undefined' && ui.leaderboardContainer) {
-        Leaderboard.render('estimathon', ui.leaderboardContainer);
-    }
 
     // --- Init ---
     function initEstimathon() {
@@ -175,8 +169,8 @@ document.addEventListener('DOMContentLoaded', () => {
         `).join('');
 
         // Submit to leaderboard
-        if (typeof Leaderboard !== 'undefined' && ui.leaderboardContainer) {
-            Leaderboard.promptAndSubmit('estimathon', estState.score, ui.leaderboardContainer);
+        if (typeof Leaderboard !== 'undefined') {
+            Leaderboard.promptAndSubmit('estimathon', estState.score);
         }
     }
 

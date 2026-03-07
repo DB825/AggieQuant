@@ -51,16 +51,10 @@ document.addEventListener('DOMContentLoaded', () => {
         finalScore: document.getElementById('pattern-final-score'),
         btnRestart: document.getElementById('pattern-restart-btn'),
         floatScore: document.getElementById('pattern-float-score'),
-        difficultySelect: document.getElementById('pattern-difficulty'),
-        leaderboardContainer: document.getElementById('pattern-leaderboard')
+        difficultySelect: document.getElementById('pattern-difficulty')
     };
 
     if (!ui.btnStart) return;
-
-    // Render initial leaderboard
-    if (typeof Leaderboard !== 'undefined' && ui.leaderboardContainer) {
-        Leaderboard.render('pattern', ui.leaderboardContainer);
-    }
 
     function startGame() {
         const diff = ui.difficultySelect ? ui.difficultySelect.value : 'medium';
@@ -197,9 +191,9 @@ document.addEventListener('DOMContentLoaded', () => {
         ui.finalScore.className = `stat-num ${patternState.score > 10 ? 'positive text-gradient' : 'neutral'}`;
 
         // Submit to leaderboard
-        if (typeof Leaderboard !== 'undefined' && ui.leaderboardContainer) {
+        if (typeof Leaderboard !== 'undefined') {
             const diffLabel = DIFFICULTIES[patternState.difficulty].label;
-            Leaderboard.promptAndSubmit('pattern', patternState.score, ui.leaderboardContainer, diffLabel);
+            Leaderboard.promptAndSubmit('pattern', patternState.score, diffLabel);
         }
     }
 

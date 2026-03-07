@@ -50,16 +50,10 @@ document.addEventListener('DOMContentLoaded', () => {
         finalScore: document.getElementById('math-final-score'),
         btnRestart: document.getElementById('math-restart-btn'),
         floatScore: document.getElementById('math-float-score'),
-        difficultySelect: document.getElementById('math-difficulty'),
-        leaderboardContainer: document.getElementById('math-leaderboard')
+        difficultySelect: document.getElementById('math-difficulty')
     };
 
     if (!ui.btnStart) return;
-
-    // Render initial leaderboard
-    if (typeof Leaderboard !== 'undefined' && ui.leaderboardContainer) {
-        Leaderboard.render('math', ui.leaderboardContainer);
-    }
 
     // --- Core Logic ---
     function startGame() {
@@ -175,9 +169,9 @@ document.addEventListener('DOMContentLoaded', () => {
         ui.finalScore.className = `stat-num ${mathState.score > 10 ? 'positive text-gradient' : 'neutral'}`;
 
         // Submit to leaderboard
-        if (typeof Leaderboard !== 'undefined' && ui.leaderboardContainer) {
+        if (typeof Leaderboard !== 'undefined') {
             const diffLabel = DIFFICULTIES[mathState.difficulty].label;
-            Leaderboard.promptAndSubmit('math', mathState.score, ui.leaderboardContainer, diffLabel);
+            Leaderboard.promptAndSubmit('math', mathState.score, diffLabel);
         }
     }
 

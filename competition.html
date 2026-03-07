@@ -311,12 +311,6 @@
                         <button id="est-restart-btn" class="btn btn-secondary">Play Again</button>
                     </div>
                 </div>
-
-                <!-- Leaderboard -->
-                <div class="lb-section" style="padding: 1.5rem;">
-                    <h4 style="margin-bottom: 1rem;"><i class="fa-solid fa-trophy"></i> Leaderboard</h4>
-                    <div id="est-leaderboard" class="table-container list-view" style="max-height: 250px;"></div>
-                </div>
             </div>
         </div>
 
@@ -386,12 +380,6 @@
                     <div style="display: flex; justify-content: center; gap: 2rem;">
                         <button id="math-restart-btn" class="btn btn-primary">Play Again</button>
                     </div>
-                </div>
-
-                <!-- Leaderboard -->
-                <div class="lb-section" style="padding: 1.5rem;">
-                    <h4 style="margin-bottom: 1rem;"><i class="fa-solid fa-trophy"></i> Leaderboard</h4>
-                    <div id="math-leaderboard" class="table-container list-view" style="max-height: 250px;"></div>
                 </div>
             </div>
         </div>
@@ -464,15 +452,30 @@
                         <button id="pattern-restart-btn" class="btn btn-primary">Play Again</button>
                     </div>
                 </div>
-
-                <!-- Leaderboard -->
-                <div class="lb-section" style="padding: 1.5rem;">
-                    <h4 style="margin-bottom: 1rem;"><i class="fa-solid fa-trophy"></i> Leaderboard</h4>
-                    <div id="pattern-leaderboard" class="table-container list-view" style="max-height: 250px;"></div>
-                </div>
             </div>
         </div>
     </main>
+
+    <!-- Leaderboard Floating Button & Drawer -->
+    <button id="lb-toggle-btn" class="lb-toggle-btn" title="Leaderboard">
+        <i class="fa-solid fa-trophy"></i>
+    </button>
+
+    <div id="lb-drawer" class="lb-drawer">
+        <div class="lb-drawer-header">
+            <h3><i class="fa-solid fa-trophy" style="color: #ffd700;"></i> Leaderboards</h3>
+            <button id="lb-close-btn" class="lb-close-btn"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+        <div class="lb-drawer-tabs">
+            <button class="lb-tab active" data-game="estimathon">Estimathon</button>
+            <button class="lb-tab" data-game="math">Mental Math</button>
+            <button class="lb-tab" data-game="pattern">Patterns</button>
+        </div>
+        <div class="lb-drawer-content" id="lb-drawer-content">
+            <!-- Populated by JS -->
+        </div>
+    </div>
+    <div id="lb-overlay" class="lb-overlay"></div>
 
     <!-- Footer -->
     <footer class="footer competition-footer">

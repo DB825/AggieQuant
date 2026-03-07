@@ -1,6 +1,7 @@
 /**
  * AggieQuant Shared Leaderboard Module
  * Uses localStorage to persist top scores per game.
+ * Renders into a global slide-out drawer.
  */
 
 const Leaderboard = (() => {
@@ -22,11 +23,6 @@ const Leaderboard = (() => {
 
     /**
      * Submit a new score.
-     * @param {string} game - Game identifier (e.g. 'market', 'estimathon', 'math', 'pattern')
-     * @param {string} name - Player name
-     * @param {number} score - Numeric score
-     * @param {string} [difficulty] - Optional difficulty label
-     * @returns {number} Rank (1-based) or -1 if didn't make top list
      */
     function submitScore(game, name, score, difficulty) {
         const scores = getScores(game);
@@ -46,8 +42,6 @@ const Leaderboard = (() => {
 
     /**
      * Render leaderboard into a container element.
-     * @param {string} game
-     * @param {HTMLElement} container
      */
     function render(game, container) {
         const scores = getScores(game);
@@ -65,8 +59,10 @@ const Leaderboard = (() => {
             return `#${i + 1}`;
         };
 
+        const hasDiff = scores.some(s => s.difficulty);
+
         let html = `<table class="data-table lb-table"><thead><tr>
-            <th>Rank</th><th>Name</th><th>Score</th>${scores.some(s => s.difficulty) ? '<th>Difficulty</th>' : ''}<th>Date</th>
+            <th>Rank</th><th>Name</th><th>Score</th>${hasDiff ? '<th>Diff.</th>' : ''}<th>Date</th>
         </tr></thead><tbody>`;
 
         scores.forEach((s, i) => {
@@ -75,7 +71,7 @@ const Leaderboard = (() => {
                 <td>${getMedal(i)}</td>
                 <td>${s.name}</td>
                 <td class="positive mono-num">${s.score.toLocaleString()}</td>
-                ${scores.some(e => e.difficulty) ? `<td>${s.difficulty}</td>` : ''}
+                ${hasDiff ? `<td>${s.difficulty}</td>` : ''}
                 <td style="color: var(--text-muted);">${s.date}</td>
             </tr>`;
         });
@@ -85,18 +81,85 @@ const Leaderboard = (() => {
     }
 
     /**
-     * Prompt user for name and submit score, then render.
+     * Prompt user for name, submit score, then open drawer to that game's tab.
      */
-    function promptAndSubmit(game, score, container, difficulty) {
+    function promptAndSubmit(game, score, difficulty) {
         const name = prompt('Enter your name for the leaderboard:', 'Anonymous') || 'Anonymous';
-        const rank = submitScore(game, name, score, difficulty);
-        render(game, container);
-        return rank;
+        submitScore(game, name, score, difficulty);
+        // Open drawer and switch to correct tab
+        openDrawerToGame(game);
+    }
+
+    function openDrawerToGame(game) {
+        const drawer = document.getElementById('lb-drawer');
+        const overlay = document.getElementById('lb-overlay');
+        const content = document.getElementById('lb-drawer-content');
+        const tabs = document.querySelectorAll('.lb-tab');
+
+        if (drawer && overlay && content) {
+            drawer.classList.add('open');
+            overlay.classList.add('active');
+
+            // Activate correct tab
+            tabs.forEach(t => t.classList.remove('active'));
+            const target = document.querySelector(`.lb-tab[data-game="${game}"]`);
+            if (target) target.classList.add('active');
+            render(game, content);
+        }
     }
 
     function clearGame(game) {
         localStorage.removeItem(getKey(game));
     }
 
-    return { submitScore, getScores, render, promptAndSubmit, clearGame };
+    // --- Drawer wiring (runs on DOMContentLoaded) ---
+    document.addEventListener('DOMContentLoaded', () => {
+        const toggleBtn = document.getElementById('lb-toggle-btn');
+        const closeBtn = document.getElementById('lb-close-btn');
+        const drawer = document.getElementById('lb-drawer');
+        const overlay = document.getElementById('lb-overlay');
+        const content = document.getElementById('lb-drawer-content');
+        const tabs = document.querySelectorAll('.lb-tab');
+
+        if (!toggleBtn || !drawer) return;
+
+        function openDrawer() {
+            drawer.classList.add('open');
+            overlay.classList.add('active');
+            // Render whichever tab is active
+            const activeTab = document.querySelector('.lb-tab.active');
+            if (activeTab && content) {
+                render(activeTab.getAttribute('data-game'), content);
+            }
+        }
+
+        function closeDrawer() {
+            drawer.classList.remove('open');
+            overlay.classList.remove('active');
+        }
+
+        toggleBtn.addEventListener('click', openDrawer);
+        closeBtn.addEventListener('click', closeDrawer);
+        overlay.addEventListener('click', closeDrawer);
+
+        // Tab switching inside drawer
+        tabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                tabs.forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+                if (content) {
+                    render(tab.getAttribute('data-game'), content);
+                }
+            });
+        });
+
+        // ESC to close
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && drawer.classList.contains('open')) {
+                closeDrawer();
+            }
+        });
+    });
+
+    return { submitScore, getScores, render, promptAndSubmit, openDrawerToGame, clearGame };
 })();

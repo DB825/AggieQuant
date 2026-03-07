@@ -167,11 +167,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 <td>${app.gpa}</td>
                 <td><span class="status-badge">${app.track}</span></td>
                 <td>
-                    <select class="status-select" data-id="${app.id}">
-                        <option value="pending" ${app.status === 'pending' ? 'selected' : ''}>Pending</option>
-                        <option value="passed" ${app.status === 'passed' ? 'selected' : ''}>Passed</option>
-                        <option value="rejected" ${app.status === 'rejected' ? 'selected' : ''}>Rejected</option>
-                        <option value="further review" ${app.status === 'further review' ? 'selected' : ''}>Further Review</option>
+                    <select class="status-select" data-id="${app.id}" style="color: ${app.status === 'passed' ? '#4cd964' : (app.status === 'rejected' ? '#ff3b30' : (app.status === 'further review' ? '#ffcc00' : 'white'))}; font-weight: 600;">
+                        <option value="pending" ${app.status === 'pending' ? 'selected' : ''} style="color: white;">Pending</option>
+                        <option value="passed" ${app.status === 'passed' ? 'selected' : ''} style="color: #4cd964;">Passed</option>
+                        <option value="rejected" ${app.status === 'rejected' ? 'selected' : ''} style="color: #ff3b30;">Rejected</option>
+                        <option value="further review" ${app.status === 'further review' ? 'selected' : ''} style="color: #ffcc00;">Further Review</option>
                     </select>
                 </td>
                 <td>
